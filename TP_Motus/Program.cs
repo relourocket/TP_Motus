@@ -11,8 +11,14 @@ namespace TP_Motus
     internal class Program
     {
 
+        /**
+         * Génère un mot avec le nombre de lettres voulu
+         * @param nbLettres Le nombre de lettres que devra contenir le mot
+         * @return motsPotentiels[indexChoisi] Le mot généré
+         */
         public static string GenererMot(int nbLettres)
         {
+            // Encode le fichier en UTF-8
             System.Text.Encoding encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
             StreamReader dico = new StreamReader("H:\\TP_Motus\\dico.txt", encoding);
 
@@ -22,7 +28,7 @@ namespace TP_Motus
 
             while(mot != null)
             {
-                
+                // Si le mot comporte le bon nombre de lettres
                 if (mot.Length == nbLettres)
                 {
                     
@@ -31,9 +37,12 @@ namespace TP_Motus
                 }
                 mot = dico.ReadLine();
             }
-
+    
+            dico.Close();
+            
             Random randomIndex = new Random();
-
+            
+            // Choisi au hasard l'index d'un des mots présélectionnés
             int indexChoisi = randomIndex.Next(0, indexPotentiel);
             return motsPotentiels[indexChoisi];
         }
