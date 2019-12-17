@@ -4,7 +4,17 @@
     <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_TP_Motus.-635781703.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="TP_Motus" t="IncludeRecursive">
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="TP_Motus.csproj" t="IncludeRecursive" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+      </e>
       <e p="TP_Motus.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
     </e>
   </component>
 </project>
