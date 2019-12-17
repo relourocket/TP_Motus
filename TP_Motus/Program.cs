@@ -77,7 +77,38 @@ namespace TP_Motus
             return motsPotentiels[indexChoisi];
         }
 
-        
+
+        /**
+         * Vérifie si un mot saisi par le joueur est valide
+         * @return bool
+         */
+        public static bool VerifierMot(string motSaisi, int nbLettres)
+        {
+            
+
+            if(motSaisi.Length == nbLettres)
+            {
+                string[] dicoVerif = LireFichier(nbLettres);
+
+                for(int index = 0; index < dicoVerif.Length; index++)
+                {
+                    if(dicoVerif[index] == motSaisi)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            else
+            {
+                return false;
+            }
+           
+        }
+
+
         /**
          * Initialise le jeu et sa difficulté
          * @return param Le tableau de paramètres de difficulté
@@ -92,7 +123,7 @@ namespace TP_Motus
             int [] param = new int[3];
             
             // Règles du jeu 
-            Console.WriteLine("Bienvenu dans le jeu Motus ! Vous allez devoir trouver un mot en un nombre de tentatives définies. \n " +
+            Console.WriteLine("Bienvenue dans le jeu Motus ! Vous allez devoir trouver un mot en un nombre de tentatives définies. \n " +
                               "Les lettres rouges sont bien placées, les jaunes sont présentes dans le mot mais mal placées");
             
             //
@@ -182,7 +213,7 @@ namespace TP_Motus
             int [] difficulte = new int[3];
             String motADeviner;
 
-            difficulte = InitialiserGame();
+            //difficulte = InitialiserGame();
             
             motADeviner = GenererMot(LireFichier(difficulte[0]));
 
