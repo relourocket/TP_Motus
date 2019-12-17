@@ -9,7 +9,7 @@ namespace TP_Motus
          * Initialise le jeu et sa difficulté
          * @return param Le tableau de paramètres de difficulté
          */
-        static int[] InitialisationGame()
+        static int[] InitialiserGame()
         {
 
             String nbLEttresS, nbTentativesS, tempsS;
@@ -108,7 +108,7 @@ namespace TP_Motus
             // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
             int [] difficulte = new int[3];
 
-            difficulte = InitialisationGame();
+            difficulte = InitialiserGame();
 
         }
     }
