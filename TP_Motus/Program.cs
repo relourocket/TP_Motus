@@ -12,11 +12,11 @@ namespace TP_Motus
     {
 
         /**
-         * Génère un mot avec le nombre de lettres voulu
-         * @param nbLettres Le nombre de lettres que devra contenir le mot
-         * @return motsPotentiels[indexChoisi] Le mot généré
+         * Lit le fichier dictionnaire et met les mots comportant le bon nombre de lettres dans un tableau
+         * @param nbLettre Le nombre de lettres voulu
+         * @return motPotentiels Les mots du dictionnaire comportant le bon nombre de lettres
          */
-        public static string GenererMot(int nbLettres)
+        public static String[] LireFichier(int nbLettres)
         {
             // Encode le fichier en UTF-8
             System.Text.Encoding encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
@@ -39,11 +39,41 @@ namespace TP_Motus
             }
     
             dico.Close();
+            return motsPotentiels;
+        }
+
+        /**
+         * Récupère le nombre de cases dans lesquelles se trouvent des mots
+         * @param motPotentiels Le tableau contenant les mots
+         * @return ctp Le nombre de cases contenant un mot
+         */
+        public static int RecupererTailleTableau(String[] motsPotentiels)
+        {
+            int cpt = 0;
             
+            for (int i = 0; i < motsPotentiels.Length; i++)
+            {
+                if (motsPotentiels[i] != null)
+                {
+                    cpt++;
+                }
+            }
+
+            return cpt;
+        }
+        
+        /**
+         * Génère un mot avec le nombre de lettres voulu
+         * @param nbLettres Le nombre de lettres que devra contenir le mot
+         * @return motsPotentiels[indexChoisi] Le mot généré
+         */
+        public static string GenererMot(String [] motsPotentiels)
+        {
+
             Random randomIndex = new Random();
             
             // Choisi au hasard l'index d'un des mots présélectionnés
-            int indexChoisi = randomIndex.Next(0, indexPotentiel);
+            int indexChoisi = randomIndex.Next(0, RecupererTailleTableau(motsPotentiels));
             return motsPotentiels[indexChoisi];
         }
 
@@ -150,10 +180,11 @@ namespace TP_Motus
             // 1 : le nombre de tentatives pour deviner le mot
             // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
             int [] difficulte = new int[3];
+            String motADeviner;
 
             difficulte = InitialiserGame();
             
-            string motADeviner = GenererMot(7);
+            motADeviner = GenererMot(LireFichier(difficulte[0]));
 
         }
     }
