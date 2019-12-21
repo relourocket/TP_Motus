@@ -39,12 +39,14 @@ namespace TP_Motus
             }
     
             dico.Close();
+
             return motsPotentiels;
         }
 
+
         /**
          * Récupère le nombre de cases dans lesquelles se trouvent des mots
-         * @param motPotentiels Le tableau contenant les mots
+         * @param motPotentiels Le tableau contenant les mots de n lettres
          * @return ctp Le nombre de cases contenant un mot
          */
         public static int RecupererTailleTableau(String[] motsPotentiels)
@@ -62,9 +64,10 @@ namespace TP_Motus
             return cpt;
         }
         
+
         /**
          * Génère un mot avec le nombre de lettres voulu
-         * @param nbLettres Le nombre de lettres que devra contenir le mot
+         * @param motsPotentiels Le tableau contenant les mots de n lettres
          * @return motsPotentiels[indexChoisi] Le mot généré
          */
         public static string GenererMot(String [] motsPotentiels)
@@ -203,20 +206,77 @@ namespace TP_Motus
 
         }
         
+
+        public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais)
+        {
+            string historiquePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Visual Studio 2019/my_projects/TP_Motus/historique.txt");
+
+            //Création du fichier s'il n'existe pas
+            if (!File.Exists(historiquePath))
+            {
+                File.AppendAllLines(historiquePath, 
+                                    new string[] { "mot,nbLettres,success", "", "total_joue,total_success,pourcentage_success", "0,0,0" });
+            }
+
+            
+            string[] historique = File.ReadAllLines(historiquePath);
+
+            //extraction des données résumées (i.e, total_joue, total_success, etc)
+            string lastLine = historique[historique.Length - 1];
+            decimal totalJoue = Int32.Parse(lastLine.Split(',')[0]);
+            decimal totalSuccess = Int32.Parse(lastLine.Split(',')[1]);
+            decimal pourcentageSuccess;
+
+            
+            //Modification des statistiques en fonction des résultats
+            totalJoue++;
+
+            if (success)
+            {
+                totalSuccess++;
+            }
+
+            pourcentageSuccess = Decimal.Round((totalSuccess / totalJoue) * 100);
+
+            
+            //Création du writer pour écrire dans le fichier historique
+            StreamWriter writer = new StreamWriter(historiquePath);
+
+            for(int i = 0; i < historique.Length - 1; i++)
+            {
+                string line = historique[i];
+
+                if (line == "")
+                {
+                    writer.WriteLine($"{mot},{nbLettres},{success},{nbEssais}");
+                }
+
+                writer.WriteLine(line);
+            }
+
+            //Ecriture ligne des statistiques
+            writer.WriteLine($"{totalJoue},{totalSuccess},{pourcentageSuccess}");
+
+
+            writer.Close();
+        }
+
+
         public static void Main(string[] args)
         {
-            
+
             // Tableau contenant les paramètres de difficulté avec : 
             // 0 : le nombre de lettres du mot à deviner
             // 1 : le nombre de tentatives pour deviner le mot
             // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
-            int [] difficulte = new int[3];
+            int[] difficulte = new int[3];
             String motADeviner;
 
             //difficulte = InitialiserGame();
-            
+
             motADeviner = GenererMot(LireFichier(difficulte[0]));
 
+            Console.ReadKey();
         }
     }
 }
