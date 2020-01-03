@@ -1,0 +1,11 @@
+mot,nbLettres,success
+bonjour,7,True,5
+bonjour,7,True,5
+bonjour,7,False,5
+bonjour,7,False,5
+bonjour,7,False,5
+bonjour,7,False,5
+bonjour,7,False,5
+
+total_joue,total_success,pourcentage_success
+7,2,29
