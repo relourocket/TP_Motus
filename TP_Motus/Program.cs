@@ -387,8 +387,9 @@ namespace TP_Motus
 
             int [] difficulte = new int[3];
             String motADeviner, proposition;
+            bool gagne = false;
 
-            //difficulte = InitialiserGame();
+            difficulte = InitialiserGame();
 
             motADeviner = GenererMot(LireFichier(difficulte[0]));
             
@@ -397,22 +398,29 @@ namespace TP_Motus
             for (int i = 0; i < difficulte[1]; i++)
             {
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
+
+                // On redemande d'entrer le mot tant qu'il n'est pas valide
+                do
+                {
+                    Console.WriteLine("Veuillez entrer votre proposition");
+                    proposition = Console.ReadLine();
+                } while (!VerifierMot(proposition, difficulte[0]));
                 
-                Console.WriteLine("Veuillez entrer votre proposition");
-                proposition = Console.ReadLine();
-                
-                // TODO : Vérifier si le mot est bon
                 essais[i] = proposition;
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
                 if (motADeviner.Equals(proposition))
                 {
-                    Console.WriteLine("Vous avez gagné !!");
+                    Console.WriteLine("Vous avez gagné en {0} propositions, bravo !", i+1);
                     i = difficulte[1];
-                }
+                    gagne = true;
+                } 
+                
             }
-            
-            Console.WriteLine("Vous avez perdu... Le mot à trouver était : {0}", motADeviner);
 
+            if (!gagne)
+            {
+                Console.WriteLine("Vous avez perdu... Le mot à trouver était : {0}", motADeviner);
+            }
         }
     }
 }
