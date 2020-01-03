@@ -20,7 +20,7 @@ namespace TP_Motus
         {
             // Encode le fichier en UTF-8
             System.Text.Encoding encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
-            StreamReader dico = new StreamReader("H:\\TP_Motus\\dico.txt", encoding);
+            StreamReader dico = new StreamReader("../../../Dictionnaire/dico.txt", encoding);
 
             int indexPotentiel = 0;
             string[] motsPotentiels = new string[336531];
@@ -82,7 +82,7 @@ namespace TP_Motus
          * Initialise le jeu et sa difficulté
          * @return param Le tableau de paramètres de difficulté
          */
-        static int[] InitialiserGame()
+        public static int[] InitialiserGame()
         {
 
             String nbLEttresS, nbTentativesS, tempsS;
@@ -171,6 +171,121 @@ namespace TP_Motus
             return param;
 
         }
+
+        /**
+         * Affiche la grille avec les différents essais
+         * @param essais Les différents essais du joueur
+         * @param nbLettres Le nombre de lettres du mot
+         * @param nbTentatives Le nombre de tentatives max
+         */
+        public static void AfficherGrille(String[] essais, int nbLettres, int nbTentatives, String motADeviner)
+        {
+            Console.WriteLine(motADeviner);
+            
+            for (int i = 0; i < nbTentatives; i++)
+            {
+                for (int j = 0; j < nbLettres; j++)
+                {
+                    // On affiche toujours la première lettre du mot à deviner
+                    if (j == 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write(" {0} ", motADeviner.Substring(0, 1).ToUpper());
+                    }
+                    else
+                    {
+                        if (essais[i] != null && essais[i] != " ")
+                        {
+
+                            // On change la couleur du fond et du devant de la console pour écrire de la couleur qu'on veut
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.Write("|");
+
+                            // On récupère la lettre de l'essai courant et on la met en minuscule pour pouvoir la comparer
+                            char lettre = essais[i].Substring(j, 1).ToLower().ToCharArray()[0];
+
+                            if (EstBienPlacee(lettre, motADeviner[j]))
+                            {
+                                // On écrit la lettre sur fond rouge car elle est bien placée
+                                Console.BackgroundColor = ConsoleColor.DarkRed;
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
+                                Console.Write(" {0} ", essais[i].Substring(j, 1).ToUpper());
+                                Console.BackgroundColor = ConsoleColor.Black;
+                            }
+                            else if (EstMalPlacee(lettre, motADeviner))
+                            {
+                                // On écrit la lettre sur fond jaune car elle est bien placée
+                                Console.BackgroundColor = ConsoleColor.Yellow;
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
+                                Console.Write(" {0} ", essais[i].Substring(j, 1).ToUpper());
+                                Console.BackgroundColor = ConsoleColor.Black;
+                            }
+                            else
+                            {
+                                // On laisse la lettre sur fond noir
+                                Console.BackgroundColor = ConsoleColor.Black;
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
+                                Console.Write(" {0} ", essais[i].Substring(j, 1).ToUpper());
+                                Console.BackgroundColor = ConsoleColor.Black;
+                            }
+                        }
+                        else
+                        {
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.Write("|   ");
+                        }
+                    }
+                }
+                
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("|");
+                Console.WriteLine();
+                
+            }
+        }
+
+        /**
+         * Vérifie si la lettre est bien placée dans le mot
+         * @param lettreMot La lettre du mot à vérifier
+         * @param lettreMotADeviner La lettre à la même position dans le mot à deviner
+         * @return True si la lettre est bien placée, False sinon
+         */
+        public static bool EstBienPlacee(char lettreMot, char lettreMotADeviner)
+        {
+            if (lettreMot == lettreMotADeviner)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Vérifie si la lettre se trouve dans le mot à deviner
+         * @param lettreMot La lettre du mot à vérifier
+         * @param motADeviner Le mot à deviner
+         * @return True si la lettre se trouve dans le mot à deviner, False sinon
+         */
+        public static bool EstMalPlacee(char lettreMot, String motADeviner)
+        {
+
+            foreach (var lettre in motADeviner)
+            {
+                if (lettreMot == lettre)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+
+        }
         
         public static void Main(string[] args)
         {
@@ -180,12 +295,33 @@ namespace TP_Motus
             // 1 : le nombre de tentatives pour deviner le mot
             // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
             int [] difficulte = new int[3];
-            String motADeviner;
+            String motADeviner, proposition;
 
             difficulte = InitialiserGame();
             
             motADeviner = GenererMot(LireFichier(difficulte[0]));
+            
+            String[] essais = new String[difficulte[1]];
 
+            for (int i = 0; i < difficulte[1]; i++)
+            {
+                AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
+                
+                Console.WriteLine("Veuillez entrer votre proposition");
+                proposition = Console.ReadLine();
+                
+                // TODO : Vérifier si le mot est bon
+                essais[i] = proposition;
+                AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
+                if (motADeviner.Equals(proposition))
+                {
+                    Console.WriteLine("Vous avez gagné !!");
+                    i = difficulte[1];
+                }
+            }
+            
+            Console.WriteLine("Vous avez perdu... Le mot à trouver était : {0}", motADeviner);
+            
         }
     }
 }
