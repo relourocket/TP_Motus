@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
@@ -22,6 +23,10 @@ namespace TP_Motus
             System.Text.Encoding encoding = System.Text.Encoding.GetEncoding("iso-8859-1");
             StreamReader dico = new StreamReader("../../../Dictionnaire/dico.txt", encoding);
 
+            //Deux expressions régulières pour éliminer les verbes conjugués 
+            Regex groupe1Regex = new Regex("((es)|(ons)|(eons)|(ez)|(ent)|(ais)|(ait)|(ions)|(iez)|(aient)|(erai)|(eras)|(era)|(erons)|(erez)|(eront)|(ai)|(as)|(a)|(âmes)|(assions)|(assiez)|(assent)|(erais)|(erait)|(erions)|(eriez)|(eraient)|(ât)$)");
+            Regex groupe2Regex = new Regex("((is)|(it)|(issons)|(issez)|(issent)|(issais)|(issait)|(issions)|(issiez)|(issaient)|(irai)|(iras)|(ira)|(irons)|(irez)|(iront)|(îmes)|(îtes)|(irent)|(isse)|(isses)|(issions)|(issiez)|(issent)|(ît)|(irait)|(irais)|(irions)|(iriez)|(iraient)$)");
+            
             int indexPotentiel = 0;
             string[] motsPotentiels = new string[336531];
             string mot = dico.ReadLine();
@@ -29,7 +34,7 @@ namespace TP_Motus
             while(mot != null)
             {
                 // Si le mot comporte le bon nombre de lettres
-                if (mot.Length == nbLettres)
+                if (mot.Length == nbLettres && !groupe1Regex.IsMatch(mot) && !groupe2Regex.IsMatch(mot))
                 {
                     
                     motsPotentiels[indexPotentiel] = mot;
@@ -85,14 +90,12 @@ namespace TP_Motus
          * Vérifie si un mot saisi par le joueur est valide
          * @return bool
          */
-        public static bool VerifierMot(string motSaisi, int nbLettres)
+        public static bool VerifierMot(string motSaisi, int nbLettres, string[] dicoVerif)
         {
             
 
             if(motSaisi.Length == nbLettres)
             {
-                string[] dicoVerif = LireFichier(nbLettres);
-
                 for(int index = 0; index < dicoVerif.Length; index++)
                 {
                     if(dicoVerif[index] == motSaisi)
@@ -172,7 +175,7 @@ namespace TP_Motus
             do
             {
                 Console.WriteLine("Voulez-vous un temps imparti pour trouver le mot ? (O/N)");
-                choixChrono = Console.ReadLine().ToCharArray()[0];
+                choixChrono = Console.ReadLine().ToUpper().ToCharArray()[0];
                 
             } while (choixChrono != 'O' && choixChrono != 'N');
 
@@ -250,7 +253,7 @@ namespace TP_Motus
                             }
                             else if (EstMalPlacee(lettre, motADeviner))
                             {
-                                // On écrit la lettre sur fond jaune car elle est bien placée
+                                // On écrit la lettre sur fond jaune car elle est mal placée
                                 Console.BackgroundColor = ConsoleColor.Yellow;
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
                                 Console.Write(" {0} ", essais[i].Substring(j, 1).ToUpper());
@@ -258,7 +261,7 @@ namespace TP_Motus
                             }
                             else
                             {
-                                // On laisse la lettre sur fond noir
+                                // On laisse la lettre sur fond noir car elle n'appartient pas au mot
                                 Console.BackgroundColor = ConsoleColor.Black;
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
                                 Console.Write(" {0} ", essais[i].Substring(j, 1).ToUpper());
@@ -324,7 +327,7 @@ namespace TP_Motus
 
         public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais)
         {
-            string historiquePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Visual Studio 2019/my_projects/TP_Motus/historique.txt");
+            string historiquePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "../../../historique.txt");
 
             //Création du fichier s'il n'existe pas
             if (!File.Exists(historiquePath))
@@ -372,7 +375,6 @@ namespace TP_Motus
             //Ecriture ligne des statistiques
             writer.WriteLine($"{totalJoue},{totalSuccess},{pourcentageSuccess}");
 
-
             writer.Close();
         }
 
@@ -385,14 +387,15 @@ namespace TP_Motus
             // 1 : le nombre de tentatives pour deviner le mot
             // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
 
-            int [] difficulte = new int[3];
+            int[] difficulte = new int[3];
             String motADeviner, proposition;
             bool gagne = false;
 
             difficulte = InitialiserGame();
 
-            motADeviner = GenererMot(LireFichier(difficulte[0]));
-            
+            string[] dicoVerif = LireFichier(difficulte[0]);
+            motADeviner = GenererMot(dicoVerif);
+
             String[] essais = new String[difficulte[1]];
 
             for (int i = 0; i < difficulte[1]; i++)
@@ -403,24 +406,27 @@ namespace TP_Motus
                 do
                 {
                     Console.WriteLine("Veuillez entrer votre proposition");
-                    proposition = Console.ReadLine();
-                } while (!VerifierMot(proposition, difficulte[0]));
-                
+                    proposition = Console.ReadLine().ToLower();
+                } while (!VerifierMot(proposition, difficulte[0], dicoVerif));
+
                 essais[i] = proposition;
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
                 if (motADeviner.Equals(proposition))
                 {
-                    Console.WriteLine("Vous avez gagné en {0} propositions, bravo !", i+1);
+                    Console.WriteLine("Vous avez gagné en {0} propositions, bravo !", i + 1);
                     i = difficulte[1];
                     gagne = true;
-                } 
-                
+                }
+
             }
 
             if (!gagne)
             {
                 Console.WriteLine("Vous avez perdu... Le mot à trouver était : {0}", motADeviner);
             }
+
+            
+            Console.ReadKey();
         }
     }
 }
