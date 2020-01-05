@@ -9,6 +9,7 @@
         <e p="Properties" t="Include">
           <e p="AssemblyInfo.cs" t="Include" />
         </e>
+        <e p="Ressources" t="Include" />
         <e p="TP_Motus.csproj" t="IncludeRecursive" />
         <e p="app.config" t="Include" />
         <e p="bin" t="ExcludeRecursive" />

@@ -406,7 +406,22 @@ namespace TP_Motus
 
             for (int i = 0; i < difficulte[1]; i++)
             {
+                
+                //============================== TIMER ============================================//
+                
                 timer.Start();
+                
+                // Récupère le temps écoulé de timer
+                TimeSpan ts = timer.Elapsed;
+ 
+                // Formatte ts pour pouvoir l'afficher
+                string time = String.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                
+                Console.WriteLine(time);
+                
+                //================================ FIN TIMER ======================================//
+                
+                // TODO : je pense qu'on peut mettre i ici ca ça prendra la même valeur 
                 nbEssaisJoueur++;
 
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
