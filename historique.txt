@@ -1,11 +1,7 @@
-mot,nbLettres,success
-bonjour,7,True,5
-bonjour,7,True,5
-bonjour,7,False,5
-bonjour,7,False,5
-bonjour,7,False,5
-bonjour,7,False,5
-bonjour,7,False,5
+mot,nbLettres,success,tempsPartie
+trière,6,True,1,3
+photonique,10,True,1,36
+recole,6,False,2,57
 
-total_joue,total_success,pourcentage_success
-7,2,29
+total_joue,total_success,pourcentage_success,tempsMoyenPartie
+3,2,67,32
