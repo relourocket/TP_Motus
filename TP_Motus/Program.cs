@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;*/
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using System.Diagnostics;
 
 namespace TP_Motus
 {
@@ -325,15 +325,15 @@ namespace TP_Motus
         }
         
 
-        public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais)
+        public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais, decimal tempsPartie)
         {
-            string historiquePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "../../../historique.txt");
+            string historiquePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "C:\\Users\\Antoine\\Documents\\Visual Studio 2019\\my_projects\\TP_Motus\\historique.txt");
 
             //Création du fichier s'il n'existe pas
             if (!File.Exists(historiquePath))
             {
                 File.AppendAllLines(historiquePath, 
-                                    new string[] { "mot,nbLettres,success", "", "total_joue,total_success,pourcentage_success", "0,0,0" });
+                                    new string[] { "mot,nbLettres,success,tempsPartie", "", "total_joue,total_success,pourcentage_success,tempsMoyenPartie", "0,0,0,0" });
             }
 
             
@@ -341,12 +341,14 @@ namespace TP_Motus
 
             //extraction des données résumées (i.e, total_joue, total_success, etc)
             string lastLine = historique[historique.Length - 1];
-            decimal totalJoue = Int32.Parse(lastLine.Split(',')[0]);
-            decimal totalSuccess = Int32.Parse(lastLine.Split(',')[1]);
+            decimal totalJoue = Decimal.Parse(lastLine.Split(',')[0]);
+            decimal totalSuccess = Decimal.Parse(lastLine.Split(',')[1]);
+            decimal tempsMoyenPartie = Decimal.Parse(lastLine.Split(',')[3]);
             decimal pourcentageSuccess;
 
-            
+
             //Modification des statistiques en fonction des résultats
+            tempsMoyenPartie = Decimal.Round((tempsMoyenPartie * totalJoue + tempsPartie) / (totalJoue + 1), 0);
             totalJoue++;
 
             if (success)
@@ -355,8 +357,8 @@ namespace TP_Motus
             }
 
             pourcentageSuccess = Decimal.Round((totalSuccess / totalJoue) * 100);
-
             
+
             //Création du writer pour écrire dans le fichier historique
             StreamWriter writer = new StreamWriter(historiquePath);
 
@@ -366,14 +368,14 @@ namespace TP_Motus
 
                 if (line == "")
                 {
-                    writer.WriteLine($"{mot},{nbLettres},{success},{nbEssais}");
+                    writer.WriteLine($"{mot},{nbLettres},{success},{nbEssais},{tempsPartie}");
                 }
 
                 writer.WriteLine(line);
             }
 
             //Ecriture ligne des statistiques
-            writer.WriteLine($"{totalJoue},{totalSuccess},{pourcentageSuccess}");
+            writer.WriteLine($"{totalJoue},{totalSuccess},{pourcentageSuccess},{tempsMoyenPartie}");
 
             writer.Close();
         }
@@ -390,6 +392,7 @@ namespace TP_Motus
             int[] difficulte = new int[3];
             String motADeviner, proposition;
             bool gagne = false;
+            int nbEssaisJoueur = 0;
 
             difficulte = InitialiserGame();
 
@@ -398,8 +401,14 @@ namespace TP_Motus
 
             String[] essais = new String[difficulte[1]];
 
+            //Objet stopwatch pour capturer le temps d'une partie
+            Stopwatch timer = new Stopwatch();
+
             for (int i = 0; i < difficulte[1]; i++)
             {
+                timer.Start();
+                nbEssaisJoueur++;
+
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
 
                 // On redemande d'entrer le mot tant qu'il n'est pas valide
@@ -411,11 +420,16 @@ namespace TP_Motus
 
                 essais[i] = proposition;
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
+
                 if (motADeviner.Equals(proposition))
                 {
-                    Console.WriteLine("Vous avez gagné en {0} propositions, bravo !", i + 1);
-                    i = difficulte[1];
+                    timer.Stop();
+                    Console.WriteLine("Vous avez gagné en {0} propositions et {1} secondes, bravo !", i + 1, Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
+
+                    //i = difficulte[1];
                     gagne = true;
+                    
+                    break;
                 }
 
             }
@@ -425,7 +439,8 @@ namespace TP_Motus
                 Console.WriteLine("Vous avez perdu... Le mot à trouver était : {0}", motADeviner);
             }
 
-            
+            EnregistrerStatistiques(motADeviner, difficulte[0], gagne, nbEssaisJoueur, Decimal.Round((decimal)timer.Elapsed.TotalSeconds,0));
+
             Console.ReadKey();
         }
     }
