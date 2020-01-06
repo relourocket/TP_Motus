@@ -21,7 +21,7 @@ namespace TP_Motus
             StreamReader dico = new StreamReader("../../../Dictionnaire/dico.txt", encoding);
 
             //Deux expressions régulières pour éliminer les verbes conjugués 
-            Regex groupe1Regex = new Regex("((es)|(ons)|(eons)|(ez)|(ent)|(ais)|(ait)|(ions)|(iez)|(aient)|(erai)|(eras)|(era)|(erons)|(erez)|(eront)|(ai)|(as)|(a)|(âmes)|(assions)|(assiez)|(assent)|(erais)|(erait)|(erions)|(eriez)|(eraient)|(ât)$)");
+            Regex groupe1Regex = new Regex("((e)|(es)|(ons)|(eons)|(ez)|(ent)|(ais)|(ait)|(ions)|(iez)|(aient)|(erai)|(eras)|(era)|(erons)|(erez)|(eront)|(ai)|(as)|(a)|(âmes)|(assions)|(assiez)|(assent)|(erais)|(erait)|(erions)|(eriez)|(eraient)|(ât)$)");
             Regex groupe2Regex = new Regex("((is)|(it)|(issons)|(issez)|(issent)|(issais)|(issait)|(issions)|(issiez)|(issaient)|(irai)|(iras)|(ira)|(irons)|(irez)|(iront)|(îmes)|(îtes)|(irent)|(isse)|(isses)|(issions)|(issiez)|(issent)|(ît)|(irait)|(irais)|(irions)|(iriez)|(iraient)$)");
 
             int indexPotentiel = 0;
@@ -495,13 +495,14 @@ namespace TP_Motus
                 }
                 else
                 {
-                    Console.WriteLine("\nTemps écoulé, vous avez perdu...");
+                    Console.WriteLine($"\nTemps écoulé, vous avez perdu... Le mot a trouver était {motADeviner}");
                     EnregistrerStatistiques(motADeviner, difficulte[0], false, -1, difficulte[2]);
 
                 }
             }
 
-            
+            System.Threading.Thread.Sleep(3000);
+
             return 0;
 
         }
