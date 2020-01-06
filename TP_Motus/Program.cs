@@ -1,10 +1,6 @@
 using System;
 using System.IO;
-/*using System.Collections.Generic;
-using System.Linq;
-using System.Text;*/
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Diagnostics;
 
 namespace TP_Motus
@@ -327,7 +323,7 @@ namespace TP_Motus
 
         public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais, decimal tempsPartie)
         {
-            string historiquePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "C:\\Users\\Antoine\\Documents\\Visual Studio 2019\\my_projects\\TP_Motus\\historique.txt");
+            string historiquePath = "../../../historique.txt";
 
             //Création du fichier s'il n'existe pas
             if (!File.Exists(historiquePath))
@@ -401,49 +397,57 @@ namespace TP_Motus
 
             String[] essais = new String[difficulte[1]];
 
+            //Coordonnées x0 et y0 du curseur pour afficher la grille et pour écrire la réponse
+            int x0Grille = Console.CursorTop;
+            int y0Grille = Console.CursorLeft;
+            int x0Rep;
+            int y0Rep;
+
+
             //Objet stopwatch pour capturer le temps d'une partie
             Stopwatch timer = new Stopwatch();
 
+            AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
+
+            x0Rep = Console.CursorTop;
+            y0Rep = Console.CursorLeft;
+
+
             for (int i = 0; i < difficulte[1]; i++)
             {
-                
-                //============================== TIMER ============================================//
-                
+
                 timer.Start();
-                
-                // Récupère le temps écoulé de timer
-                TimeSpan ts = timer.Elapsed;
- 
-                // Formatte ts pour pouvoir l'afficher
-                string time = String.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                
-                Console.WriteLine(time);
-                
-                //================================ FIN TIMER ======================================//
-                
-                // TODO : je pense qu'on peut mettre i ici ca ça prendra la même valeur 
+
                 nbEssaisJoueur++;
 
-                AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
+
 
                 // On redemande d'entrer le mot tant qu'il n'est pas valide
                 do
                 {
-                    Console.WriteLine("Veuillez entrer votre proposition");
+                    Console.SetCursorPosition(y0Rep, x0Rep);
+                    Console.WriteLine("Veuillez entrer votre proposition :");
+                    Console.Write("                                                \r");
+                    
                     proposition = Console.ReadLine().ToLower();
+
                 } while (!VerifierMot(proposition, difficulte[0], dicoVerif));
 
                 essais[i] = proposition;
+
+                //On change les positions du curseur pour réécrire la grille par dessus l'ancienne
+                Console.SetCursorPosition(y0Grille, x0Grille);
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
 
                 if (motADeviner.Equals(proposition))
                 {
                     timer.Stop();
-                    Console.WriteLine("Vous avez gagné en {0} propositions et {1} secondes, bravo !", i + 1, Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
 
-                    //i = difficulte[1];
-                    gagne = true;
+                    Console.WriteLine("                                   ");
+                    Console.WriteLine("Vous avez gagné en {0} propositions et {1} secondes, bravo !", i + 1, Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
                     
+                    gagne = true;
+
                     break;
                 }
 
@@ -451,10 +455,11 @@ namespace TP_Motus
 
             if (!gagne)
             {
+                Console.WriteLine("                                   ");
                 Console.WriteLine("Vous avez perdu... Le mot à trouver était : {0}", motADeviner);
             }
 
-            EnregistrerStatistiques(motADeviner, difficulte[0], gagne, nbEssaisJoueur, Decimal.Round((decimal)timer.Elapsed.TotalSeconds,0));
+            EnregistrerStatistiques(motADeviner, difficulte[0], gagne, nbEssaisJoueur, Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
 
             Console.ReadKey();
         }
