@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Diagnostics;
 
 namespace TP_Motus
@@ -22,23 +23,23 @@ namespace TP_Motus
             //Deux expressions régulières pour éliminer les verbes conjugués 
             Regex groupe1Regex = new Regex("((es)|(ons)|(eons)|(ez)|(ent)|(ais)|(ait)|(ions)|(iez)|(aient)|(erai)|(eras)|(era)|(erons)|(erez)|(eront)|(ai)|(as)|(a)|(âmes)|(assions)|(assiez)|(assent)|(erais)|(erait)|(erions)|(eriez)|(eraient)|(ât)$)");
             Regex groupe2Regex = new Regex("((is)|(it)|(issons)|(issez)|(issent)|(issais)|(issait)|(issions)|(issiez)|(issaient)|(irai)|(iras)|(ira)|(irons)|(irez)|(iront)|(îmes)|(îtes)|(irent)|(isse)|(isses)|(issions)|(issiez)|(issent)|(ît)|(irait)|(irais)|(irions)|(iriez)|(iraient)$)");
-            
+
             int indexPotentiel = 0;
             string[] motsPotentiels = new string[336531];
             string mot = dico.ReadLine();
 
-            while(mot != null)
+            while (mot != null)
             {
                 // Si le mot comporte le bon nombre de lettres
                 if (mot.Length == nbLettres && !groupe1Regex.IsMatch(mot) && !groupe2Regex.IsMatch(mot))
                 {
-                    
+
                     motsPotentiels[indexPotentiel] = mot;
                     indexPotentiel++;
                 }
                 mot = dico.ReadLine();
             }
-    
+
             dico.Close();
 
             return motsPotentiels;
@@ -53,7 +54,7 @@ namespace TP_Motus
         public static int RecupererTailleTableau(String[] motsPotentiels)
         {
             int cpt = 0;
-            
+
             for (int i = 0; i < motsPotentiels.Length; i++)
             {
                 if (motsPotentiels[i] != null)
@@ -64,18 +65,18 @@ namespace TP_Motus
 
             return cpt;
         }
-        
+
 
         /**
          * Génère un mot avec le nombre de lettres voulu
          * @param motsPotentiels Le tableau contenant les mots de n lettres
          * @return motsPotentiels[indexChoisi] Le mot généré
          */
-        public static string GenererMot(String [] motsPotentiels)
+        public static string GenererMot(String[] motsPotentiels)
         {
 
             Random randomIndex = new Random();
-            
+
             // Choisi au hasard l'index d'un des mots présélectionnés
             int indexChoisi = randomIndex.Next(0, RecupererTailleTableau(motsPotentiels));
             return motsPotentiels[indexChoisi];
@@ -88,13 +89,13 @@ namespace TP_Motus
          */
         public static bool VerifierMot(string motSaisi, int nbLettres, string[] dicoVerif)
         {
-            
 
-            if(motSaisi.Length == nbLettres)
+
+            if (motSaisi.Length == nbLettres)
             {
-                for(int index = 0; index < dicoVerif.Length; index++)
+                for (int index = 0; index < dicoVerif.Length; index++)
                 {
-                    if(dicoVerif[index] == motSaisi)
+                    if (dicoVerif[index] == motSaisi)
                     {
                         return true;
                     }
@@ -107,7 +108,7 @@ namespace TP_Motus
             {
                 return false;
             }
-           
+
         }
 
 
@@ -121,17 +122,17 @@ namespace TP_Motus
             String nbLEttresS, nbTentativesS, tempsS;
             int nbLettres = 0, nbTentatives = 0, temps = 0;
             char choixChrono = ' ';
-            
-            int [] param = new int[3];
-            
+
+            int[] param = new int[3];
+
             // Règles du jeu 
             Console.WriteLine("Bienvenue dans le jeu Motus ! Vous allez devoir trouver un mot en un nombre de tentatives définies. \n " +
                               "Les lettres rouges sont bien placées, les jaunes sont présentes dans le mot mais mal placées");
-            
+
             //
             // Définition des paramètres de difficulté
             //
-            
+
             Console.WriteLine("Veuillez choisir les paramètres de difficulté avant de démarrer");
 
             do
@@ -147,7 +148,7 @@ namespace TP_Motus
                 {
                     Console.WriteLine("Erreur de parsing");
                 }
-                
+
             } while (nbLettres < 6 || nbLettres > 10);
 
 
@@ -172,11 +173,11 @@ namespace TP_Motus
             {
                 Console.WriteLine("Voulez-vous un temps imparti pour trouver le mot ? (O/N)");
                 choixChrono = Console.ReadLine().ToUpper().ToCharArray()[0];
-                
+
             } while (choixChrono != 'O' && choixChrono != 'N');
 
-            
-            if (choixChrono == 'O')
+
+            if (choixChrono == 'O' || choixChrono == 'o')
             {
                 Console.WriteLine("Combien de temps maximum désirez-vous pour répondre ? (en secondes)");
                 tempsS = Console.ReadLine();
@@ -189,13 +190,13 @@ namespace TP_Motus
                 {
                     Console.WriteLine("Erreur de parsing");
                 }
-                
+
             }
             else
             {
                 temps = -1;
             }
-            
+
             // Enregistrement des paramètres de difficulté dans un tableau
             param[0] = nbLettres;
             param[1] = nbTentatives;
@@ -214,7 +215,7 @@ namespace TP_Motus
         public static void AfficherGrille(String[] essais, int nbLettres, int nbTentatives, String motADeviner)
         {
             Console.WriteLine(motADeviner);
-            
+
             for (int i = 0; i < nbTentatives; i++)
             {
                 for (int j = 0; j < nbLettres; j++)
@@ -272,12 +273,12 @@ namespace TP_Motus
                         }
                     }
                 }
-                
+
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("|");
                 Console.WriteLine();
-                
+
             }
         }
 
@@ -315,11 +316,11 @@ namespace TP_Motus
                     return true;
                 }
             }
-            
+
             return false;
 
         }
-        
+
 
         public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais, decimal tempsPartie)
         {
@@ -328,11 +329,11 @@ namespace TP_Motus
             //Création du fichier s'il n'existe pas
             if (!File.Exists(historiquePath))
             {
-                File.AppendAllLines(historiquePath, 
-                                    new string[] { "mot,nbLettres,success,tempsPartie", "", "total_joue,total_success,pourcentage_success,tempsMoyenPartie", "0,0,0,0" });
+                File.AppendAllLines(historiquePath,
+                                    new string[] { "mot,nbLettres,success,nbEssais,tempsPartie (en secondes)", "", "total_joue,total_success,pourcentage_success,tempsMoyenPartie", "0,0,0,0" });
             }
 
-            
+
             string[] historique = File.ReadAllLines(historiquePath);
 
             //extraction des données résumées (i.e, total_joue, total_success, etc)
@@ -353,12 +354,12 @@ namespace TP_Motus
             }
 
             pourcentageSuccess = Decimal.Round((totalSuccess / totalJoue) * 100);
-            
+
 
             //Création du writer pour écrire dans le fichier historique
             StreamWriter writer = new StreamWriter(historiquePath);
 
-            for(int i = 0; i < historique.Length - 1; i++)
+            for (int i = 0; i < historique.Length - 1; i++)
             {
                 string line = historique[i];
 
@@ -376,24 +377,11 @@ namespace TP_Motus
             writer.Close();
         }
 
-
-        public static void Main(string[] args)
+        static int Jouer(int[] difficulte, String motADeviner, String[] dicoVerif)
         {
-
-            // Tableau contenant les paramètres de difficulté avec : 
-            // 0 : le nombre de lettres du mot à deviner
-            // 1 : le nombre de tentatives pour deviner le mot
-            // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
-
-            int[] difficulte = new int[3];
-            String motADeviner, proposition;
+            String proposition;
             bool gagne = false;
             int nbEssaisJoueur = 0;
-
-            difficulte = InitialiserGame();
-
-            string[] dicoVerif = LireFichier(difficulte[0]);
-            motADeviner = GenererMot(dicoVerif);
 
             String[] essais = new String[difficulte[1]];
 
@@ -428,7 +416,7 @@ namespace TP_Motus
                     Console.SetCursorPosition(y0Rep, x0Rep);
                     Console.WriteLine("Veuillez entrer votre proposition :");
                     Console.Write("                                                \r");
-                    
+
                     proposition = Console.ReadLine().ToLower();
 
                 } while (!VerifierMot(proposition, difficulte[0], dicoVerif));
@@ -444,13 +432,13 @@ namespace TP_Motus
                     timer.Stop();
 
                     Console.WriteLine("                                   ");
-                    Console.WriteLine("Vous avez gagné en {0} propositions et {1} secondes, bravo !", i + 1, Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
-                    
+                    Console.WriteLine("Vous avez gagné en {0} propositions et {1} secondes, bravo !", i + 1,
+                        Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
+
                     gagne = true;
 
                     break;
                 }
-
             }
 
             if (!gagne)
@@ -461,7 +449,61 @@ namespace TP_Motus
 
             EnregistrerStatistiques(motADeviner, difficulte[0], gagne, nbEssaisJoueur, Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
 
-            Console.ReadKey();
+            return nbEssaisJoueur;
+        }
+
+        public static int Main(string[] args)
+        {
+            // Tableau contenant les paramètres de difficulté avec : 
+            // 0 : le nombre de lettres du mot à deviner
+            // 1 : le nombre de tentatives pour deviner le mot
+            // 2 : le temps imparti en secondes si le joueur en veut un, -1 sinon
+
+            int[] difficulte = new int[3];
+            String motADeviner;
+            int temps;
+
+            difficulte = InitialiserGame();
+
+            // On convertit le temps en millisecondes
+            temps = difficulte[2] * 1000;
+
+            string[] dicoVerif = LireFichier(difficulte[0]);
+            motADeviner = GenererMot(dicoVerif);
+
+            // Si le joueur ne veut pas de temps imparti
+            if (difficulte[2] == -1)
+            {
+                Jouer(difficulte, motADeviner, dicoVerif);
+            }
+            else
+            {
+                //
+                // On sort de la fonction Jouer si elle met plus du temps imparti "temps" pour être exécutée
+                //
+
+                var task = Task.Run(() =>
+                {
+                    return Jouer(difficulte, motADeviner, dicoVerif);
+                });
+
+                bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(temps));
+
+                if (isCompletedSuccessfully)
+                {
+                    return task.Result;
+                }
+                else
+                {
+                    Console.WriteLine("\nTemps écoulé, vous avez perdu...");
+                    EnregistrerStatistiques(motADeviner, difficulte[0], false, -1, difficulte[2]);
+
+                }
+            }
+
+            
+            return 0;
+
         }
     }
 }
