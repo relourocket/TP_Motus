@@ -9,11 +9,13 @@ namespace TP_Motus
     internal class Program
     {
 
-        /**
-         * Lit le fichier dictionnaire et met les mots comportant le bon nombre de lettres dans un tableau
-         * @param nbLettre Le nombre de lettres voulu
-         * @return motPotentiels Les mots du dictionnaire comportant le bon nombre de lettres
-         */
+        /// <summary>
+        /// Lit le fichier dictionnaire et met les mots comportant le bon nombre de lettres dans un tableau.
+        /// </summary>
+        /// <returns>
+        /// Les mots du dictionnaire comportant le bon nombre de lettres.
+        /// </returns>
+        /// <param name="nbLettre"> Le nombre de lettres voulu.</param>
         public static String[] LireFichier(int nbLettres)
         {
             // Encode le fichier en UTF-8
@@ -30,7 +32,7 @@ namespace TP_Motus
 
             while(mot != null)
             {
-                // Si le mot comporte le bon nombre de lettres
+                // Si le mot comporte le bon nombre de lettres et que ce n'est pas un verbe conjugué
                 if (mot.Length == nbLettres && !groupe1Regex.IsMatch(mot) && !groupe2Regex.IsMatch(mot))
                 {
                     
@@ -46,11 +48,13 @@ namespace TP_Motus
         }
 
 
-        /**
-         * Récupère le nombre de cases dans lesquelles se trouvent des mots
-         * @param motPotentiels Le tableau contenant les mots de n lettres
-         * @return ctp Le nombre de cases contenant un mot
-         */
+        /// <summary>
+        /// Récupère le nombre de cases dans lesquelles se trouvent des mots.
+        /// </summary>
+        /// <returns>
+        /// Le nombre de cases contenant un mot.
+        /// </returns>
+        /// <param name="motPotentiels"> Le tableau contenant les mots de n lettres.</param>
         public static int RecupererTailleTableau(String[] motsPotentiels)
         {
             int cpt = 0;
@@ -67,34 +71,42 @@ namespace TP_Motus
         }
         
 
-        /**
-         * Génère un mot avec le nombre de lettres voulu
-         * @param motsPotentiels Le tableau contenant les mots de n lettres
-         * @return motsPotentiels[indexChoisi] Le mot généré
-         */
+        /// <summary>
+        /// Génère un mot avec le nombre de lettres voulu.
+        /// </summary>
+        /// <returns>
+        /// Le mot de n lettres généré.
+        /// </returns>
+        /// <param name="motsPotentiels"> Le tableau contenant les mots de n lettres.</param>
         public static string GenererMot(String [] motsPotentiels)
         {
 
             Random randomIndex = new Random();
             
-            // Choisi au hasard l'index d'un des mots présélectionnés
+            // Choisi au hasard l'index d'un des mots présélectionnés de n lettres
             int indexChoisi = randomIndex.Next(0, RecupererTailleTableau(motsPotentiels));
             return motsPotentiels[indexChoisi];
         }
 
 
-        /**
-         * Vérifie si un mot saisi par le joueur est valide
-         * @return bool
-         */
+        /// <summary>
+        /// Vérifie si un mot saisi par le joueur est valide.
+        /// </summary>
+        /// <returns>
+        /// True si le mot est valide, False sinon
+        /// </returns>
+        /// <param name="motSaisi"> Le mot saisi par l'utilisateur.</param>
+        /// <param name="nbLettres"> Le nombre de lettres que doit contenir le mot saisi.</param>
+        /// <param name="dicoVerif"> Tous les mots contenant le nombre de lettres nbLettres.</param>
         public static bool VerifierMot(string motSaisi, int nbLettres, string[] dicoVerif)
         {
             
-
+            // Si le mot saisi contient le bon nombre de lettres
             if(motSaisi.Length == nbLettres)
             {
                 for(int index = 0; index < dicoVerif.Length; index++)
                 {
+                    // Si le mot se trouve dans le dictionnaire
                     if(dicoVerif[index] == motSaisi)
                     {
                         return true;
@@ -103,7 +115,6 @@ namespace TP_Motus
 
                 return false;
             }
-
             else
             {
                 return false;
@@ -112,17 +123,21 @@ namespace TP_Motus
         }
 
 
-        /**
-         * Initialise le jeu et sa difficulté
-         * @return param Le tableau de paramètres de difficulté
-         */
+        /// <summary>
+        /// Initialise le jeu et sa difficulté.
+        /// </summary>
+        /// <returns>
+        /// Le tableau de difficultés avec :
+        /// [0] : le nombre de lettres du mot
+        /// [1] : le nombre de tentatives max
+        /// [2] : le temps imparti pour trouver le mot en secondes, -1 si le joueur ne veut pas de temps imparti
+        /// </returns>
         public static int[] InitialiserGame()
         {
 
             String nbLEttresS, nbTentativesS, tempsS;
             int nbLettres = 0, nbTentatives = 0, temps = 0;
             char choixChrono = ' ';
-            
             int [] param = new int[3];
             
             // Règles du jeu 
@@ -135,6 +150,7 @@ namespace TP_Motus
             
             Console.WriteLine("Veuillez choisir les paramètres de difficulté avant de démarrer");
 
+            // On redemande le nombre de lettres du mot à générer tant qu'il ne se trouve pas entre 6 et 10
             do
             {
                 Console.WriteLine("Combien de lettre contiendra le mot à trouver (entre 6 et 10)");
@@ -151,7 +167,7 @@ namespace TP_Motus
                 
             } while (nbLettres < 6 || nbLettres > 10);
 
-
+            // On redemande le nombre de tentatives max tant qu'il n'est pas compris entre 1 et 15
             do
             {
                 Console.WriteLine("Veuillez choisir en combien de tentatives le mot pourra être trouvé (entre 1 et 15)");
@@ -168,7 +184,7 @@ namespace TP_Motus
 
             } while (nbTentatives < 1 || nbTentatives > 15);
 
-
+            // On redemande de faire le choix tant que l'utilisateur n'entre pas O ou N
             do
             {
                 Console.WriteLine("Voulez-vous un temps imparti pour trouver le mot ? (O/N)");
@@ -177,7 +193,7 @@ namespace TP_Motus
             } while (choixChrono != 'O' && choixChrono != 'N');
 
             
-            if (choixChrono == 'O' || choixChrono == 'o')
+            if (choixChrono == 'O')
             {
                 Console.WriteLine("Combien de temps maximum désirez-vous pour répondre ? (en secondes)");
                 tempsS = Console.ReadLine();
@@ -206,12 +222,13 @@ namespace TP_Motus
 
         }
 
-        /**
-         * Affiche la grille avec les différents essais
-         * @param essais Les différents essais du joueur
-         * @param nbLettres Le nombre de lettres du mot
-         * @param nbTentatives Le nombre de tentatives max
-         */
+        /// <summary>
+        /// Affiche la grille avec les différents essais et les lettres dans les différentes couleurs.
+        /// </summary>
+        /// <param name="essais"> Les différents essais du joueur.</param>
+        /// <param name="nbLettres"> Le nombre de lettre du mot à trouver.</param>
+        /// <param name="nbTentatives"> Le nombre de tentatives max.</param>
+        /// <param name="motADeviner"> Le mot à deviner.</param>
         public static void AfficherGrille(String[] essais, int nbLettres, int nbTentatives, String motADeviner)
         {
             Console.WriteLine(motADeviner);
@@ -223,22 +240,23 @@ namespace TP_Motus
                     // On affiche toujours la première lettre du mot à deviner
                     if (j == 0)
                     {
+                        // On écrit en gris sur un fond rouge
                         Console.BackgroundColor = ConsoleColor.DarkRed;
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write(" {0} ", motADeviner.Substring(0, 1).ToUpper());
                     }
                     else
                     {
+                        // S'il y a un essai sur la ligne courante
                         if (essais[i] != null && essais[i] != " ")
                         {
-
-                            // On change la couleur du fond et du devant de la console pour écrire de la couleur qu'on veut
+                            // On écrit en gris sur un fond noir
                             Console.BackgroundColor = ConsoleColor.Black;
                             Console.ForegroundColor = ConsoleColor.Gray;
                             Console.Write("|");
 
-                            // On récupère la lettre de l'essai courant et on la met en minuscule pour pouvoir la comparer
-                            char lettre = essais[i].Substring(j, 1).ToLower().ToCharArray()[0];
+                            // On récupère la lettre de l'essai courant
+                            char lettre = essais[i].Substring(j, 1).ToCharArray()[0];
 
                             if (EstBienPlacee(lettre, motADeviner[j]))
                             {
@@ -282,12 +300,14 @@ namespace TP_Motus
             }
         }
 
-        /**
-         * Vérifie si la lettre est bien placée dans le mot
-         * @param lettreMot La lettre du mot à vérifier
-         * @param lettreMotADeviner La lettre à la même position dans le mot à deviner
-         * @return True si la lettre est bien placée, False sinon
-         */
+        /// <summary>
+        /// Vérifie si la lettre est bien placée dans le mot.
+        /// </summary>
+        /// <returns>
+        /// True si la lettre est bien placée, False sinon
+        /// </returns>
+        /// <param name="lettreMot"> La lettre du mot à vérifier.</param>
+        /// <param name="lettreMotADeviner"> La lettre à la même position dans le mot à deviner.</param>
         public static bool EstBienPlacee(char lettreMot, char lettreMotADeviner)
         {
             if (lettreMot == lettreMotADeviner)
@@ -300,15 +320,18 @@ namespace TP_Motus
             }
         }
 
-        /**
-         * Vérifie si la lettre se trouve dans le mot à deviner
-         * @param lettreMot La lettre du mot à vérifier
-         * @param motADeviner Le mot à deviner
-         * @return True si la lettre se trouve dans le mot à deviner, False sinon
-         */
+        /// <summary>
+        /// Vérifie si la lettre se trouve dans le mot à deviner.
+        /// </summary>
+        /// <returns>
+        /// True si la lettre se trouve dans le mot à deviner, False sinon
+        /// </returns>
+        /// <param name="lettreMot"> La lettre du mot à vérifier.</param>
+        /// <param name="motADeviner"> Le mot à deviner.</param>
         public static bool EstMalPlacee(char lettreMot, String motADeviner)
         {
 
+            // On regarde pour chaque lettre du mot à deviner si la lettre à vérifier correspond
             foreach (var lettre in motADeviner)
             {
                 if (lettreMot == lettre)
@@ -321,22 +344,31 @@ namespace TP_Motus
 
         }
         
-
+        /// <summary>
+        /// Enregistre les statistiques de jeu du joueur
+        /// </summary>
+        /// <param name="mot"> Le mot à deviner.</param>
+        /// <param name="nbLettres"> Le nombre de lettres du mot à deviner.</param>
+        /// <param name="success"> True si la partie s'est terminée après une victoire du joueur, False sinon.</param>
+        /// <param name="nbEssais"> Le nombre de tentatives du joueur avant la fin de la partie.</param>
+        /// <param name="tempsPartie"> Le temps qu'à duré la partie.</param>
         public static void EnregistrerStatistiques(string mot, int nbLettres, bool success, int nbEssais, decimal tempsPartie)
         {
             string historiquePath = "../../../historique.txt";
 
-            //Création du fichier s'il n'existe pas
+            // On crée le fichier s'il n'existe pas
             if (!File.Exists(historiquePath))
             {
                 File.AppendAllLines(historiquePath, 
-                                    new string[] { "mot,nbLettres,success,nbEssais,tempsPartie (en secondes)", "", "total_joue,total_success,pourcentage_success,tempsMoyenPartie", "0,0,0,0" });
+                                    new string[] { "mot,nbLettres,success,nbEssais,tempsPartie (en secondes)", 
+                                        "", 
+                                        "total_joue,total_success,pourcentage_success,tempsMoyenPartie", "0,0,0,0" });
             }
 
             
             string[] historique = File.ReadAllLines(historiquePath);
 
-            //extraction des données résumées (i.e, total_joue, total_success, etc)
+            // On extrait les données résumées (i.e, total_joue, total_success, etc)
             string lastLine = historique[historique.Length - 1];
             decimal totalJoue = Decimal.Parse(lastLine.Split(',')[0]);
             decimal totalSuccess = Decimal.Parse(lastLine.Split(',')[1]);
@@ -344,7 +376,7 @@ namespace TP_Motus
             decimal pourcentageSuccess;
 
 
-            //Modification des statistiques en fonction des résultats
+            // On modifie les statistiques en fonction des résultats
             tempsMoyenPartie = Decimal.Round((tempsMoyenPartie * totalJoue + tempsPartie) / (totalJoue + 1), 0);
             totalJoue++;
 
@@ -356,7 +388,7 @@ namespace TP_Motus
             pourcentageSuccess = Decimal.Round((totalSuccess / totalJoue) * 100);
             
 
-            //Création du writer pour écrire dans le fichier historique
+            // On crée le writer pour écrire dans le fichier historique
             StreamWriter writer = new StreamWriter(historiquePath);
 
             for(int i = 0; i < historique.Length - 1; i++)
@@ -371,12 +403,21 @@ namespace TP_Motus
                 writer.WriteLine(line);
             }
 
-            //Ecriture ligne des statistiques
+            // On écrit la ligne des statistiques
             writer.WriteLine($"{totalJoue},{totalSuccess},{pourcentageSuccess},{tempsMoyenPartie}");
 
             writer.Close();
         }
 
+        /// <summary>
+        /// Permet de jouer une partie.
+        /// </summary>
+        /// <returns>
+        /// Le nombre de tentatives qu'à fait le joueur durant la partie
+        /// </returns>
+        /// <param name="difficulte"> Le tableau contenant les paramètres de difficulté définis.</param>
+        /// <param name="motADeviner"> Le mot que le joueur doit deviner.</param>
+        /// <param name="dicoVerif"> Tous les mots contenant le nombre de lettres définit par le joueur.</param>
         static int Jouer(int[] difficulte, String motADeviner, String[] dicoVerif)
         {
             String proposition;
@@ -385,18 +426,18 @@ namespace TP_Motus
 
             String[] essais = new String[difficulte[1]];
 
-            //Coordonnées x0 et y0 du curseur pour afficher la grille et pour écrire la réponse
+            // Coordonnées x0 et y0 du curseur pour afficher la grille et pour écrire la réponse
             int x0Grille = Console.CursorTop;
             int y0Grille = Console.CursorLeft;
             int x0Rep;
             int y0Rep;
 
 
-            //Objet stopwatch pour capturer le temps d'une partie
+            // Objet stopwatch pour capturer le temps d'une partie
             Stopwatch timer = new Stopwatch();
 
             AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
-
+            
             x0Rep = Console.CursorTop;
             y0Rep = Console.CursorLeft;
 
@@ -407,9 +448,7 @@ namespace TP_Motus
                 timer.Start();
 
                 nbEssaisJoueur++;
-
-
-
+                
                 // On redemande d'entrer le mot tant qu'il n'est pas valide
                 do
                 {
@@ -423,10 +462,11 @@ namespace TP_Motus
 
                 essais[i] = proposition;
 
-                //On change les positions du curseur pour réécrire la grille par dessus l'ancienne
+                // On change les positions du curseur pour réécrire la grille par dessus l'ancienne
                 Console.SetCursorPosition(y0Grille, x0Grille);
                 AfficherGrille(essais, difficulte[0], difficulte[1], motADeviner);
 
+                // Si le mot entré correspond au mot à deviner
                 if (motADeviner.Equals(proposition))
                 {
                     timer.Stop();
@@ -441,6 +481,7 @@ namespace TP_Motus
                 }
             }
             
+            // Si la partie se termine sans que le joueur ait gagné
             if (!gagne)
             {
                 Console.WriteLine("                                   ");
