@@ -23,25 +23,25 @@ namespace TP_Motus
             StreamReader dico = new StreamReader("../../../Dictionnaire/dico.txt", encoding);
 
             //Deux expressions régulières pour éliminer les verbes conjugués 
-            Regex groupe1Regex = new Regex("((es)|(ons)|(eons)|(ez)|(ent)|(ais)|(ait)|(ions)|(iez)|(aient)|(erai)|(eras)|(era)|(erons)|(erez)|(eront)|(ai)|(as)|(a)|(âmes)|(assions)|(assiez)|(assent)|(erais)|(erait)|(erions)|(eriez)|(eraient)|(ât)$)");
+            Regex groupe1Regex = new Regex("((e)|(es)|(ons)|(eons)|(ez)|(ent)|(ais)|(ait)|(ions)|(iez)|(aient)|(erai)|(eras)|(era)|(erons)|(erez)|(eront)|(ai)|(as)|(a)|(âmes)|(assions)|(assiez)|(assent)|(erais)|(erait)|(erions)|(eriez)|(eraient)|(ât)$)");
             Regex groupe2Regex = new Regex("((is)|(it)|(issons)|(issez)|(issent)|(issais)|(issait)|(issions)|(issiez)|(issaient)|(irai)|(iras)|(ira)|(irons)|(irez)|(iront)|(îmes)|(îtes)|(irent)|(isse)|(isses)|(issions)|(issiez)|(issent)|(ît)|(irait)|(irais)|(irions)|(iriez)|(iraient)$)");
-            
+
             int indexPotentiel = 0;
             string[] motsPotentiels = new string[336531];
             string mot = dico.ReadLine();
 
-            while(mot != null)
+            while (mot != null)
             {
                 // Si le mot comporte le bon nombre de lettres et que ce n'est pas un verbe conjugué
                 if (mot.Length == nbLettres && !groupe1Regex.IsMatch(mot) && !groupe2Regex.IsMatch(mot))
                 {
-                    
+
                     motsPotentiels[indexPotentiel] = mot;
                     indexPotentiel++;
                 }
                 mot = dico.ReadLine();
             }
-    
+
             dico.Close();
 
             return motsPotentiels;
@@ -58,7 +58,7 @@ namespace TP_Motus
         public static int RecupererTailleTableau(String[] motsPotentiels)
         {
             int cpt = 0;
-            
+
             for (int i = 0; i < motsPotentiels.Length; i++)
             {
                 if (motsPotentiels[i] != null)
@@ -69,7 +69,7 @@ namespace TP_Motus
 
             return cpt;
         }
-        
+
 
         /// <summary>
         /// Génère un mot avec le nombre de lettres voulu.
@@ -84,6 +84,7 @@ namespace TP_Motus
             Random randomIndex = new Random();
             
             // Choisi au hasard l'index d'un des mots présélectionnés de n lettres
+
             int indexChoisi = randomIndex.Next(0, RecupererTailleTableau(motsPotentiels));
             return motsPotentiels[indexChoisi];
         }
@@ -104,7 +105,7 @@ namespace TP_Motus
             // Si le mot saisi contient le bon nombre de lettres
             if(motSaisi.Length == nbLettres)
             {
-                for(int index = 0; index < dicoVerif.Length; index++)
+                for (int index = 0; index < dicoVerif.Length; index++)
                 {
                     // Si le mot se trouve dans le dictionnaire
                     if(dicoVerif[index] == motSaisi)
@@ -119,7 +120,7 @@ namespace TP_Motus
             {
                 return false;
             }
-           
+
         }
 
 
@@ -143,11 +144,11 @@ namespace TP_Motus
             // Règles du jeu 
             Console.WriteLine("Bienvenue dans le jeu Motus ! Vous allez devoir trouver un mot en un nombre de tentatives définies. \n " +
                               "Les lettres rouges sont bien placées, les jaunes sont présentes dans le mot mais mal placées");
-            
+
             //
             // Définition des paramètres de difficulté
             //
-            
+
             Console.WriteLine("Veuillez choisir les paramètres de difficulté avant de démarrer");
 
             // On redemande le nombre de lettres du mot à générer tant qu'il ne se trouve pas entre 6 et 10
@@ -164,7 +165,7 @@ namespace TP_Motus
                 {
                     Console.WriteLine("Erreur de parsing");
                 }
-                
+
             } while (nbLettres < 6 || nbLettres > 10);
 
             // On redemande le nombre de tentatives max tant qu'il n'est pas compris entre 1 et 15
@@ -189,7 +190,7 @@ namespace TP_Motus
             {
                 Console.WriteLine("Voulez-vous un temps imparti pour trouver le mot ? (O/N)");
                 choixChrono = Console.ReadLine().ToUpper().ToCharArray()[0];
-                
+
             } while (choixChrono != 'O' && choixChrono != 'N');
 
             
@@ -206,13 +207,13 @@ namespace TP_Motus
                 {
                     Console.WriteLine("Erreur de parsing");
                 }
-                
+
             }
             else
             {
                 temps = -1;
             }
-            
+
             // Enregistrement des paramètres de difficulté dans un tableau
             param[0] = nbLettres;
             param[1] = nbTentatives;
@@ -232,7 +233,7 @@ namespace TP_Motus
         public static void AfficherGrille(String[] essais, int nbLettres, int nbTentatives, String motADeviner)
         {
             Console.WriteLine(motADeviner);
-            
+
             for (int i = 0; i < nbTentatives; i++)
             {
                 for (int j = 0; j < nbLettres; j++)
@@ -291,12 +292,12 @@ namespace TP_Motus
                         }
                     }
                 }
-                
+
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("|");
                 Console.WriteLine();
-                
+
             }
         }
 
@@ -339,7 +340,7 @@ namespace TP_Motus
                     return true;
                 }
             }
-            
+
             return false;
 
         }
@@ -365,7 +366,7 @@ namespace TP_Motus
                                         "total_joue,total_success,pourcentage_success,tempsMoyenPartie", "0,0,0,0" });
             }
 
-            
+
             string[] historique = File.ReadAllLines(historiquePath);
 
             // On extrait les données résumées (i.e, total_joue, total_success, etc)
@@ -386,12 +387,12 @@ namespace TP_Motus
             }
 
             pourcentageSuccess = Decimal.Round((totalSuccess / totalJoue) * 100);
-            
+
 
             // On crée le writer pour écrire dans le fichier historique
             StreamWriter writer = new StreamWriter(historiquePath);
 
-            for(int i = 0; i < historique.Length - 1; i++)
+            for (int i = 0; i < historique.Length - 1; i++)
             {
                 string line = historique[i];
 
@@ -473,7 +474,7 @@ namespace TP_Motus
 
                     Console.WriteLine("                                   ");
                     Console.WriteLine("Vous avez gagné en {0} propositions et {1} secondes, bravo !", i + 1,
-                        Decimal.Round((decimal) timer.Elapsed.TotalSeconds, 0));
+                        Decimal.Round((decimal)timer.Elapsed.TotalSeconds, 0));
 
                     gagne = true;
 
@@ -505,7 +506,7 @@ namespace TP_Motus
             int temps;
 
             difficulte = InitialiserGame();
-            
+
             // On convertit le temps en millisecondes
             temps = difficulte[2] * 1000;
 
@@ -522,25 +523,27 @@ namespace TP_Motus
                 //
                 // On sort de la fonction Jouer si elle met plus du temps imparti "temps" pour être exécutée
                 //
-                
+
                 var task = Task.Run(() =>
                 {
                     return Jouer(difficulte, motADeviner, dicoVerif);
                 });
 
                 bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(temps));
- 
+
                 if (isCompletedSuccessfully)
                 {
                     return task.Result;
                 }
                 else
                 {
-                    Console.WriteLine("\nTemps écoulé, vous avez perdu...");
+                    Console.WriteLine($"\nTemps écoulé, vous avez perdu... Le mot a trouver était {motADeviner}");
                     EnregistrerStatistiques(motADeviner, difficulte[0], false, -1, difficulte[2]);
 
-                } 
+                }
             }
+
+            System.Threading.Thread.Sleep(3000);
 
             return 0;
 
