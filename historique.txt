@@ -1,7 +1,0 @@
-mot,nbLettres,success,tempsPartie
-trière,6,True,1,3
-photonique,10,True,1,36
-recole,6,False,2,57
-
-total_joue,total_success,pourcentage_success,tempsMoyenPartie
-3,2,67,32
