@@ -57,17 +57,17 @@ namespace TP_Motus
         /// <param name="motPotentiels"> Le tableau contenant les mots de n lettres.</param>
         public static int RecupererTailleTableau(String[] motsPotentiels)
         {
-            int cpt = 0;
+            int count = 0;
 
             for (int i = 0; i < motsPotentiels.Length; i++)
             {
                 if (motsPotentiels[i] != null)
                 {
-                    cpt++;
+                    count++;
                 }
             }
 
-            return cpt;
+            return count;
         }
 
 
@@ -98,7 +98,7 @@ namespace TP_Motus
         /// </returns>
         /// <param name="motSaisi"> Le mot saisi par l'utilisateur.</param>
         /// <param name="nbLettres"> Le nombre de lettres que doit contenir le mot saisi.</param>
-        /// <param name="dicoVerif"> Tous les mots contenant le nombre de lettres nbLettres.</param>
+        /// <param name="dicoVerif"> Tous les mots valides contenant le nombre de lettres nbLettres.</param>
         public static bool VerifierMot(string motSaisi, int nbLettres, string[] dicoVerif)
         {
             
@@ -232,8 +232,6 @@ namespace TP_Motus
         /// <param name="motADeviner"> Le mot à deviner.</param>
         public static void AfficherGrille(String[] essais, int nbLettres, int nbTentatives, String motADeviner)
         {
-            Console.WriteLine(motADeviner);
-
             for (int i = 0; i < nbTentatives; i++)
             {
                 for (int j = 0; j < nbLettres; j++)
@@ -538,7 +536,7 @@ namespace TP_Motus
                 else
                 {
                     Console.WriteLine($"\nTemps écoulé, vous avez perdu... Le mot a trouver était {motADeviner}");
-                    EnregistrerStatistiques(motADeviner, difficulte[0], false, -1, difficulte[2]);
+                    EnregistrerStatistiques(motADeviner, difficulte[0], false, -1, -1);
 
                 }
             }

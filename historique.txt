@@ -1,22 +1,6 @@
-mot,nbLettres,success,tempsPartie
-trière,6,True,1,3
-photonique,10,True,1,36
-recole,6,False,2,57
-toupet,6,True,5,16
-cocher,6,True,2,8
-déluré,6,True,1,3
-éclose,6,True,2,9
-longés,6,True,1,2
-détiré,6,True,1,3
-bêchés,6,False,2,18
-piqués,6,False,1,4
-butoir,6,True,3,63
-pézize,6,True,3,31
-emploi,6,True,1,6
-enlier,6,False,2,18
-veille,6,True,1,4
-tendre,6,True,1,2
-éructe,6,False,-1,2
+mot,nbLettres,success,nbEssais,tempsPartie (en secondes)
+dénudé,6,True,1,2
+chicot,6,False,-1,2
 
 total_joue,total_success,pourcentage_success,tempsMoyenPartie
-18,13,72,15
+2,1,50,2
