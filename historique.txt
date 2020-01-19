@@ -1,6 +1,9 @@
 mot,nbLettres,success,nbEssais,tempsPartie (en secondes)
 dénudé,6,True,1,2
 chicot,6,False,-1,2
+bouclé,6,True,1,11
+vibrés,6,True,1,19
+bovidé,6,True,1,7
 
 total_joue,total_success,pourcentage_success,tempsMoyenPartie
-2,1,50,2
+5,4,80,8

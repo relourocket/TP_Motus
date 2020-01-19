@@ -296,7 +296,9 @@ namespace TP_Motus
                 Console.Write("|");
                 Console.WriteLine();
 
+                
             }
+
         }
 
         /// <summary>
@@ -454,6 +456,7 @@ namespace TP_Motus
                     Console.SetCursorPosition(y0Rep, x0Rep);
                     Console.WriteLine("Veuillez entrer votre proposition :");
                     Console.Write("                                                \r");
+                    Console.WriteLine($"\n\n\n\n\n\n {motADeviner}");
 
                     proposition = Console.ReadLine().ToLower();
 
